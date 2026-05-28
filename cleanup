@@ -1,0 +1,3 @@
+#!/bin/sh
+rm -f configure.log
+rm -f src/Makevars src/Makevars.win src/*.o src/*.dll src/*.so

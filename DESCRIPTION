@@ -1,0 +1,29 @@
+Package: ipopt
+Type: Package
+Title: R Interface to the Ipopt Nonlinear Optimizer
+Version: 1.0
+Authors@R: c(
+    person("Balasubramanian", "Narasimhan", role = c("aut", "cre"),
+           email = "naras@stanford.edu"),
+    person("Andreas", "Waechter", role = c("ctb", "cph"),
+           comment = "Main author of Ipopt; COIN-OR project manager"),
+    person("Carl", "Laird", role = c("ctb", "cph"),
+           comment = "Main author of Ipopt"),
+    person("Stefan", "Vigerske", role = "ctb",
+           comment = "COIN-OR project manager for Ipopt"),
+    person("COIN-OR Foundation", role = "cph",
+           comment = "Ipopt project and copyright holder")
+    )
+Description: Provides a lightweight R interface to the Ipopt nonlinear
+    optimization solver through Ipopt's C interface. The package is intended
+    for r-universe builds that provide Ipopt and its open linear solver
+    dependencies, such as MUMPS, through system libraries discoverable by
+    pkg-config.
+License: EPL
+Encoding: UTF-8
+SystemRequirements: Ipopt (>= 3.14) with pkg-config metadata
+NeedsCompilation: yes
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.3.3
+Suggests:
+    tinytest

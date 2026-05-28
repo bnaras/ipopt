@@ -47,3 +47,10 @@ po/*~
 
 # RStudio Connect folder
 rsconnect/
+
+## Compile artifacts
+src/Makevars
+src/Makevars.win
+src/symbols.rds
+src/*.o
+src/*.so

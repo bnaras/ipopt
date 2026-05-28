@@ -1,0 +1,11 @@
+#!/bin/sh
+
+if command -v pkg-config >/dev/null 2>&1 && pkg-config --exists ipopt; then
+  PKG_CFLAGS=`pkg-config --cflags ipopt`
+  PKG_LIBS=`pkg-config --libs ipopt`
+  sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" src/Makevars.in > src/Makevars.win
+else
+  echo "ERROR: Ipopt was not found by pkg-config." >&2
+  echo "Windows builds currently require pkg-config metadata for Ipopt." >&2
+  exit 1
+fi
