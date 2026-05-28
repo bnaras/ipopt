@@ -3,6 +3,8 @@
 #include <R_ext/Rdynload.h>
 #include <stdbool.h>
 #include <string.h>
+#define IPOPT_INTTYPES_MACROS 1
+
 #include <IpStdCInterface.h>
 
 typedef struct {

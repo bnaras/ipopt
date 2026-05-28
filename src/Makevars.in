@@ -1,4 +1,4 @@
-PKG_CPPFLAGS = @cflags@ -DSTRICT_R_HEADERS -DIPOPT_INTTYPES_MACROS
+PKG_CPPFLAGS = @cflags@
 PKG_LIBS = @libs@ 
 
 all: clean
