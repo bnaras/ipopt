@@ -21,7 +21,7 @@ Description: Provides a lightweight R interface to the Ipopt nonlinear
     pkg-config.
 License: EPL
 Encoding: UTF-8
-SystemRequirements: Ipopt (>= 3.14) with pkg-config metadata
+SystemRequirements: libipopt-dev, pkg-config
 NeedsCompilation: yes
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.3.3
