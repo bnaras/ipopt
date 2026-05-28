@@ -1,5 +1,9 @@
 # ipopt
 
+<!-- badges: start -->
+  [![R-CMD-check](https://github.com/bnaras/ipopt/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bnaras/ipopt/actions/workflows/R-CMD-check.yaml)
+  <!-- badges: end -->
+
 Lightweight R interface to the Ipopt nonlinear optimizer through Ipopt's C
 interface.
 
