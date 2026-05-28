@@ -39,13 +39,23 @@ jobs:
           r-version: ${{ matrix.config.r }}
           http-user-agent: ${{ matrix.config.http-user-agent }}
 
-      # Force macOS to look inside Homebrew's modern directories for ipopt
+      - name: Install system dependencies (Ubuntu)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y coinor-libipopt-dev pkg-config
+
+      - name: Install system dependencies (macOS)
+        if: runner.os == 'macOS'
+        run: brew install ipopt pkg-config
+
       - name: Set macOS Build Flags for ipopt
         if: runner.os == 'macOS'
         run: |
-          echo "PKG_CONFIG_PATH=/opt/homebrew/opt/ipopt/lib/pkgconfig" >> $GITHUB_ENV
-          echo "CPATH=/opt/homebrew/include" >> $GITHUB_ENV
-          echo "LIBRARY_PATH=/opt/homebrew/lib" >> $GITHUB_ENV
+          IPOPT_PREFIX=$(brew --prefix ipopt)
+          echo "PKG_CONFIG_PATH=$IPOPT_PREFIX/lib/pkgconfig" >> $GITHUB_ENV
+          echo "CPATH=$IPOPT_PREFIX/include" >> $GITHUB_ENV
+          echo "LIBRARY_PATH=$IPOPT_PREFIX/lib" >> $GITHUB_ENV
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
