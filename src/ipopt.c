@@ -166,8 +166,9 @@ SEXP C_ipopt_version(void) {
   int minor = IPOPT_VERSION_MINOR;
   int release = IPOPT_VERSION_RELEASE;
 #else
-  int major = 0, minor = 0, release = 0;
-  GetIpoptVersion(&major, &minor, &release);
+  int major = NA_INTEGER;
+  int minor = NA_INTEGER;
+  int release = NA_INTEGER;
 #endif
   SEXP out = PROTECT(allocVector(INTSXP, 3));
   INTEGER(out)[0] = major;

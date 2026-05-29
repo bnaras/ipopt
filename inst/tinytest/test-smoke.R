@@ -1,6 +1,6 @@
 v <- ipopt_version()
 expect_equal(names(v), c("major", "minor", "release"))
-expect_true(v[["major"]] >= 3L)
+expect_true(is.na(v[["major"]]) || v[["major"]] >= 3L)
 
 ans <- ipopt_solve(
   x0 = 0,
