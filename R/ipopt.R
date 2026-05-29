@@ -24,7 +24,12 @@ ipopt_version <- function() {
 #' @param jacobian_structure Integer two-column matrix of one-based row/column
 #'   positions for Jacobian nonzeros.
 #' @param eval_h Function `(x, obj_factor, lambda)` returning Hessian nonzero
-#'   values in the order specified by `hessian_structure`.
+#'   values in the order specified by `hessian_structure`. A structurally empty
+#'   Hessian (no rows in `hessian_structure`, the function returning
+#'   `numeric()`) is valid and corresponds to a linear objective with
+#'   linear/bound constraints. Pass `NULL` only when no exact Hessian is
+#'   available, in which case a Hessian approximation must be requested via
+#'   `options` (for example `hessian_approximation = "limited-memory"`).
 #' @param hessian_structure Integer two-column matrix of one-based lower
 #'   triangular row/column positions for Hessian nonzeros.
 #' @param options Named list of Ipopt options. Numeric, integer, logical, and
@@ -72,7 +77,7 @@ ipopt_solve <- function(x0,
     eval_g %||% function(x) numeric(),
     eval_jac_g %||% function(x) numeric(),
     jacobian_structure,
-    eval_h %||% function(x, obj_factor, lambda) numeric(),
+    eval_h,
     hessian_structure,
     options
   )

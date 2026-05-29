@@ -37,3 +37,21 @@ expect_equal(ans$status_code, 0L)
 expect_equal(ans$solution, c(1.5, 2.5), tolerance = 1e-6)
 expect_equal(ans$constraints, 4, tolerance = 1e-8)
 expect_equal(ans$objective, 0.5, tolerance = 1e-8)
+
+# Linear objective with only bound constraints: the Lagrangian Hessian is
+# structurally empty. In exact-Hessian mode (the default) this must still solve;
+# the Hessian callback is supplied but reports zero entries.
+ans <- ipopt_solve(
+  x0 = c(0, 0),
+  lower = c(1, 1),
+  upper = c(2, 2),
+  eval_f = function(x) sum(x),
+  eval_grad_f = function(x) c(1, 1),
+  hessian_structure = matrix(integer(), ncol = 2),
+  eval_h = function(x, obj_factor, lambda) numeric(),
+  options = list(print_level = 0L, tol = 1e-8)
+)
+
+expect_equal(ans$status_code, 0L)
+expect_equal(ans$solution, c(1, 1), tolerance = 1e-6)
+expect_equal(ans$objective, 2, tolerance = 1e-8)

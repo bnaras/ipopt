@@ -200,11 +200,20 @@ SEXP C_ipopt_solve(SEXP x0, SEXP lower, SEXP upper,
     jacobian_structure, hessian_structure
   };
 
+  /* Register the Hessian callback whenever a Hessian function was supplied,
+     regardless of its nonzero count. A structurally empty Hessian (nele_hess
+     == 0), as arises from a linear objective with only linear/bound
+     constraints, is still a valid exact Hessian: r_eval_h then reports zero
+     entries. Gating on nele_hess > 0 instead left Ipopt in exact mode with no
+     callback, which aborts ("No callback function for evaluating the Hessian
+     ... provided"). This mirrors cyipopt, which always installs the callback
+     when the caller provides a Hessian. When eval_h is absent (NULL), the
+     caller must request a Hessian approximation (e.g. limited-memory). */
   IpoptProblem prob = CreateIpoptProblem(
     n, REAL(lower), REAL(upper), m, REAL(constraint_lower),
     REAL(constraint_upper), nele_jac, nele_hess, 0,
     r_eval_f, r_eval_g, r_eval_grad_f, r_eval_jac_g,
-    nele_hess > 0 ? r_eval_h : NULL
+    Rf_isFunction(eval_h) ? r_eval_h : NULL
   );
   if (prob == NULL) {
     UNPROTECT(1);

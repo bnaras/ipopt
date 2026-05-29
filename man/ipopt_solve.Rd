@@ -40,7 +40,12 @@ order specified by \code{jacobian_structure}.}
 positions for Jacobian nonzeros.}
 
 \item{eval_h}{Function \verb{(x, obj_factor, lambda)} returning Hessian nonzero
-values in the order specified by \code{hessian_structure}.}
+values in the order specified by \code{hessian_structure}. A structurally empty
+Hessian (no rows in \code{hessian_structure}, the function returning
+\code{numeric()}) is valid and corresponds to a linear objective with
+linear/bound constraints. Pass \code{NULL} only when no exact Hessian is
+available, in which case a Hessian approximation must be requested via
+\code{options} (for example \code{hessian_approximation = "limited-memory"}).}
 
 \item{hessian_structure}{Integer two-column matrix of one-based lower
 triangular row/column positions for Hessian nonzeros.}
