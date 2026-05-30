@@ -7,23 +7,53 @@
 Lightweight R interface to the Ipopt nonlinear optimizer through Ipopt's C
 interface.
 
-This package is intended first for r-universe builds where Ipopt and its open
-linear solver dependencies, such as MUMPS, are available as system libraries
-discoverable with `pkg-config`.
+The package links against the system Ipopt library, located at build time
+with `pkg-config`. It is a `unix`-only package (Linux and macOS): there is
+no Windows build, because Ipopt is not packaged for the Windows R toolchain.
 
-## Build
+## Installation
 
-```sh
-R CMD INSTALL .
-```
-
-The package configure script requires:
+A system Ipopt (and `pkg-config`) must be available; the `configure` script
+requires
 
 ```sh
 pkg-config --cflags --libs ipopt
 ```
 
 to succeed.
+
+### Linux
+
+Install the system library, then build from source:
+
+```sh
+# Debian / Ubuntu
+sudo apt-get install -y coinor-libipopt-dev pkg-config
+R CMD INSTALL .
+```
+
+A binary will also be available from the
+[r-universe](https://bnaras.r-universe.dev) once Ipopt is registered in the
+system-requirements database:
+
+```r
+install.packages("ipopt", repos = "https://bnaras.r-universe.dev")
+```
+
+### macOS (build from source)
+
+Homebrew provides Ipopt, so macOS users build from source. The `configure`
+script locates the Homebrew Ipopt automatically:
+
+```sh
+brew install ipopt pkg-config
+```
+
+```r
+install.packages("ipopt", repos = "https://bnaras.r-universe.dev", type = "source")
+```
+
+Equivalently, clone the repository and run `R CMD INSTALL .`.
 
 ## Smoke Test
 
