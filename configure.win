@@ -32,6 +32,13 @@ elif command -v pkg-config >/dev/null 2>&1 && pkg-config --exists ipopt; then
   IPOPT_BINDIR=`pkg-config --variable=prefix ipopt`/bin
 fi
 
+# Normalize backslashes to forward slashes: gcc accepts '/' on Windows, and it
+# avoids backslashes being eaten as escapes by sed (and by make) below.
+to_fwd() { printf '%s' "$1" | tr '\\' '/'; }
+IPOPT_INCLUDE=`to_fwd "${IPOPT_INCLUDE}"`
+IPOPT_LIBDIR=`to_fwd "${IPOPT_LIBDIR}"`
+IPOPT_BINDIR=`to_fwd "${IPOPT_BINDIR}"`
+
 if [ -z "${IPOPT_INCLUDE}" ] || [ ! -f "${IPOPT_INCLUDE}/IpStdCInterface.h" ]; then
   echo "------------------------------- [ipopt] -------------------------------" >&2
   echo "Ipopt headers were not found for the Windows build." >&2
