@@ -1,11 +1,90 @@
 #!/bin/sh
 
-if command -v pkg-config >/dev/null 2>&1 && pkg-config --exists ipopt; then
-  PKG_CFLAGS=`pkg-config --cflags ipopt`
-  PKG_LIBS=`pkg-config --libs ipopt`
-  sed -e "s|@cflags@|$PKG_CFLAGS|" -e "s|@libs@|$PKG_LIBS|" src/Makevars.in > src/Makevars.win
-else
-  echo "ERROR: Ipopt was not found by pkg-config." >&2
-  echo "Windows builds currently require pkg-config metadata for Ipopt." >&2
+# configure.win -- locate a prebuilt Ipopt for the Windows R (Rtools/MinGW)
+# toolchain.
+#
+# Ipopt's official Windows binaries (https://github.com/coin-or/Ipopt/releases)
+# are MSVC builds, but they export the Ipopt C interface (IpStdCInterface.h) as
+# plain cdecl C symbols.  Only the C ABI crosses the link boundary, and that is
+# compatible between MSVC and MinGW on x86_64, so Rtools' `ld` can link the R
+# package directly against the MSVC-built `ipopt-*.dll`.
+#
+# Resolution order:
+#   1. INCLUDE_DIR / LIB_DIR  (R CMD INSTALL --configure-vars='...')
+#   2. IPOPT_HOME             (root of an extracted release zip)
+#   3. pkg-config             (e.g. an MSYS2/Rtools-provided ipopt)
+
+IPOPT_INCLUDE=""
+IPOPT_LIBDIR=""
+IPOPT_BINDIR=""
+
+if [ -n "${INCLUDE_DIR}" ] || [ -n "${LIB_DIR}" ]; then
+  IPOPT_INCLUDE="${INCLUDE_DIR}"
+  IPOPT_LIBDIR="${LIB_DIR}"
+  IPOPT_BINDIR="${LIB_DIR}/../bin"
+elif [ -n "${IPOPT_HOME}" ]; then
+  IPOPT_INCLUDE="${IPOPT_HOME}/include/coin-or"
+  IPOPT_LIBDIR="${IPOPT_HOME}/lib"
+  IPOPT_BINDIR="${IPOPT_HOME}/bin"
+elif command -v pkg-config >/dev/null 2>&1 && pkg-config --exists ipopt; then
+  IPOPT_INCLUDE=`pkg-config --variable=includedir ipopt`/coin-or
+  IPOPT_LIBDIR=`pkg-config --variable=libdir ipopt`
+  IPOPT_BINDIR=`pkg-config --variable=prefix ipopt`/bin
+fi
+
+# Normalize backslashes to forward slashes: gcc accepts '/' on Windows, and it
+# avoids backslashes being eaten as escapes by sed (and by make) below.
+to_fwd() { printf '%s' "$1" | tr '\\' '/'; }
+IPOPT_INCLUDE=`to_fwd "${IPOPT_INCLUDE}"`
+IPOPT_LIBDIR=`to_fwd "${IPOPT_LIBDIR}"`
+IPOPT_BINDIR=`to_fwd "${IPOPT_BINDIR}"`
+
+if [ -z "${IPOPT_INCLUDE}" ] || [ ! -f "${IPOPT_INCLUDE}/IpStdCInterface.h" ]; then
+  echo "------------------------------- [ipopt] -------------------------------" >&2
+  echo "Ipopt headers were not found for the Windows build." >&2
+  echo "" >&2
+  echo "Download a Windows release (the 'win64-msvs2022-md' zip) from" >&2
+  echo "  https://github.com/coin-or/Ipopt/releases" >&2
+  echo "extract it (e.g. to C:/Ipopt), then install with one of:" >&2
+  echo "" >&2
+  echo "  R CMD INSTALL ipopt \\" >&2
+  echo "    --configure-vars='INCLUDE_DIR=C:/Ipopt/include/coin-or LIB_DIR=C:/Ipopt/lib'" >&2
+  echo "" >&2
+  echo "or set the environment variable IPOPT_HOME=C:/Ipopt before installing." >&2
+  echo "Use forward slashes in paths.  See the package README for details." >&2
+  echo "-----------------------------------------------------------------------" >&2
   exit 1
 fi
+
+# Prefer linking the DLL directly: Rtools' ld synthesizes the import stubs from
+# the cdecl C exports, so no MSVC .lib / dlltool step is needed.  Fall back to a
+# MinGW-style import library if one happens to be present.
+PKG_LIBS=""
+for cand in "${IPOPT_BINDIR}"/ipopt-*.dll "${IPOPT_BINDIR}"/ipopt.dll; do
+  if [ -f "${cand}" ]; then
+    PKG_LIBS="\"${cand}\""
+    break
+  fi
+done
+
+if [ -z "${PKG_LIBS}" ]; then
+  if [ -f "${IPOPT_LIBDIR}/libipopt.dll.a" ] || [ -f "${IPOPT_LIBDIR}/libipopt.a" ]; then
+    PKG_LIBS="-L\"${IPOPT_LIBDIR}\" -lipopt"
+  else
+    echo "------------------------------- [ipopt] -------------------------------" >&2
+    echo "Found Ipopt headers in ${IPOPT_INCLUDE} but no library to link against:" >&2
+    echo "expected ipopt-*.dll in ${IPOPT_BINDIR}, or a MinGW import library" >&2
+    echo "(libipopt.dll.a / libipopt.a) in ${IPOPT_LIBDIR}." >&2
+    echo "-----------------------------------------------------------------------" >&2
+    exit 1
+  fi
+fi
+
+PKG_CFLAGS="-I\"${IPOPT_INCLUDE}\""
+
+echo "Using PKG_CFLAGS=${PKG_CFLAGS}"
+echo "Using PKG_LIBS=${PKG_LIBS}"
+
+sed -e "s|@cflags@|${PKG_CFLAGS}|" -e "s|@libs@|${PKG_LIBS}|" src/Makevars.in > src/Makevars.win
+
+exit 0

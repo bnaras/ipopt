@@ -7,9 +7,11 @@
 Lightweight R interface to the Ipopt nonlinear optimizer through Ipopt's C
 interface.
 
-The package links against the system Ipopt library, located at build time
-with `pkg-config`. It is a `unix`-only package (Linux and macOS): there is
-no Windows build, because Ipopt is not packaged for the Windows R toolchain.
+The package links against an Ipopt library located at build time. On Linux
+and macOS this is the system Ipopt found with `pkg-config`; on Windows it is
+one of Ipopt's official prebuilt release binaries (see below). There is no
+binary on CRAN/r-universe for every platform yet, so most users build from
+source against a locally installed Ipopt.
 
 ## Installation
 
@@ -54,6 +56,44 @@ install.packages("ipopt", repos = "https://bnaras.r-universe.dev", type = "sourc
 ```
 
 Equivalently, clone the repository and run `R CMD INSTALL .`.
+
+### Windows (prebuilt Ipopt binary)
+
+Ipopt does not ship in the Windows R toolchain, but the Ipopt project
+publishes prebuilt Windows binaries that this package can link against.
+Although those binaries are built with MSVC, they export the Ipopt C
+interface as plain C symbols, so Rtools' (MinGW) linker can use them
+directly.
+
+1. Install [Rtools](https://cran.r-project.org/bin/windows/Rtools/) (matching
+   your R version).
+
+2. Download the latest **`win64-msvs2022-md`** zip from
+   [Ipopt releases](https://github.com/coin-or/Ipopt/releases) and extract it,
+   for example to `C:\Ipopt`, giving you `C:\Ipopt\include\coin-or`,
+   `C:\Ipopt\lib`, and `C:\Ipopt\bin`.
+
+3. Build from source, pointing the package at that folder (use **forward
+   slashes**):
+
+   ```sh
+   R CMD INSTALL ipopt ^
+     --configure-vars="INCLUDE_DIR=C:/Ipopt/include/coin-or LIB_DIR=C:/Ipopt/lib"
+   ```
+
+   Equivalently, set `IPOPT_HOME=C:/Ipopt` in the environment before
+   installing and the script will find the headers, library, and DLL itself.
+
+4. At **run time**, the package loads `ipopt-3.dll` and its dependencies
+   (`coinmumps-3.dll` and the Intel runtime DLLs, all in `C:\Ipopt\bin`). Make
+   sure that folder is on the `PATH` for the R session, e.g.
+
+   ```r
+   Sys.setenv(PATH = paste("C:/Ipopt/bin", Sys.getenv("PATH"), sep = ";"))
+   library(ipopt)
+   ```
+
+   (Add `C:\Ipopt\bin` to the system `PATH` to avoid doing this each session.)
 
 ## Smoke Test
 
