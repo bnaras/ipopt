@@ -20,12 +20,14 @@ jobs:
       matrix:
         config:
           - {os: macos-latest,   r: 'release'}
+          - {os: windows-latest, r: 'release'}
           - {os: ubuntu-latest,  r: 'devel', http-user-agent: 'release'}
           - {os: ubuntu-latest,  r: 'release'}
 
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
       R_KEEP_PKG_SOURCE: yes
+      IPOPT_VERSION: 3.14.19
 
     steps:
       - uses: actions/checkout@v4
@@ -54,6 +56,21 @@ jobs:
           echo "PKG_CONFIG_PATH=$IPOPT_PREFIX/lib/pkgconfig" >> $GITHUB_ENV
           echo "CPATH=$IPOPT_PREFIX/include" >> $GITHUB_ENV
           echo "LIBRARY_PATH=$IPOPT_PREFIX/lib" >> $GITHUB_ENV
+
+      - name: Download prebuilt Ipopt (Windows)
+        if: runner.os == 'Windows'
+        shell: pwsh
+        run: |
+          $ver = $env:IPOPT_VERSION
+          $zip = "Ipopt-$ver-win64-msvs2022-md.zip"
+          $url = "https://github.com/coin-or/Ipopt/releases/download/releases/$ver/$zip"
+          Write-Host "Downloading $url"
+          Invoke-WebRequest -Uri $url -OutFile $zip
+          Expand-Archive -Path $zip -DestinationPath C:\ipopt-dl -Force
+          $ipoptHome = "C:\ipopt-dl\Ipopt-$ver-win64-msvs2022-md"
+          # Build-time discovery (configure.win) + run-time DLL resolution.
+          "IPOPT_HOME=$ipoptHome"  | Out-File -FilePath $env:GITHUB_ENV  -Append -Encoding utf8
+          "$ipoptHome\bin"         | Out-File -FilePath $env:GITHUB_PATH -Append -Encoding utf8
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
