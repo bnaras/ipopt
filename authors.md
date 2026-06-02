@@ -2,7 +2,8 @@
 
 ## Authors
 
-- **Balasubramanian Narasimhan**. Author, maintainer.
+- **[Balasubramanian Narasimhan](https://naras.su.domains)**. Author,
+  maintainer.
 
 - **Andreas Waechter**. Contributor, copyright holder.  
   Main author of Ipopt; COIN-OR project manager
@@ -22,12 +23,12 @@ Source:
 [`DESCRIPTION`](https://github.com/bnaras/ipopt/blob/main/DESCRIPTION)
 
 Narasimhan B (2026). *ipopt: R Interface to the Ipopt Nonlinear
-Optimizer*. R package version 1.0, <https://github.com/bnaras/ipopt>.
+Optimizer*. R package version 1.0, <https://bnaras.github.io/ipopt/>.
 
     @Manual{,
       title = {ipopt: R Interface to the Ipopt Nonlinear Optimizer},
       author = {Balasubramanian Narasimhan},
       year = {2026},
       note = {R package version 1.0},
-      url = {https://github.com/bnaras/ipopt},
+      url = {https://bnaras.github.io/ipopt/},
     }

@@ -105,7 +105,7 @@
 <p>At <strong>run time</strong>, the package loads <code>ipopt-3.dll</code> and its dependencies (<code>coinmumps-3.dll</code> and the Intel runtime DLLs, all in <code>C:\Ipopt\bin</code>). Make sure that folder is on the <code>PATH</code> for the R session, e.g.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>PATH <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"C:/Ipopt/bin"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"PATH"</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">";"</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bnaras/ipopt" class="external-link">ipopt</a></span><span class="op">)</span></span></code></pre></div>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bnaras.github.io/ipopt/">ipopt</a></span><span class="op">)</span></span></code></pre></div>
 <p>(Add <code>C:\Ipopt\bin</code> to the system <code>PATH</code> to avoid doing this each session.)</p>
 </li>
 </ol>
@@ -115,7 +115,7 @@
 <h2 id="smoke-test">Smoke Test<a class="anchor" aria-label="anchor" href="#smoke-test"></a>
 </h2>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/bnaras/ipopt" class="external-link">ipopt</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bnaras.github.io/ipopt/">ipopt</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/ipopt_solve.html">ipopt_solve</a></span><span class="op">(</span></span>
 <span>  x0 <span class="op">=</span> <span class="fl">0</span>,</span>
@@ -155,7 +155,8 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Balasubramanian Narasimhan <br><small class="roles"> Author, maintainer </small>   </li>
+<li>
+<a href="https://naras.su.domains" class="external-link">Balasubramanian Narasimhan</a> <br><small class="roles"> Author, maintainer </small>   </li>
 <li><a href="authors.html">More about authors...</a></li>
 </ul>
 </div>
@@ -173,7 +174,7 @@
 
 
     <footer><div class="pkgdown-footer-left">
-  <p>Developed by Balasubramanian Narasimhan.</p>
+  <p>Developed by <a href="https://naras.su.domains" class="external-link">Balasubramanian Narasimhan</a>.</p>
 </div>
 
 <div class="pkgdown-footer-right">
