@@ -3,6 +3,10 @@ url: https://bnaras.github.io/ipopt/
 template:
   bootstrap: 5
 
+authors:
+  Balasubramanian Narasimhan:
+    href: https://naras.su.domains
+
 reference:
 - title: Solving nonlinear programs
   contents:
