@@ -29,7 +29,8 @@ ipopt_version <- function() {
 #'   `numeric()`) is valid and corresponds to a linear objective with
 #'   linear/bound constraints. Pass `NULL` only when no exact Hessian is
 #'   available, in which case a Hessian approximation must be requested via
-#'   `options` (for example `hessian_approximation = "limited-memory"`).
+#'   `options` (for example `hessian_approximation = "limited-memory"`);
+#'   `eval_h = NULL` without such an option is an error.
 #' @param hessian_structure Integer two-column matrix of one-based lower
 #'   triangular row/column positions for Hessian nonzeros.
 #' @param options Named list of Ipopt options. Numeric, integer, logical, and
@@ -61,6 +62,19 @@ ipopt_solve <- function(x0,
   }
   if (m > 0L && (is.null(eval_g) || is.null(eval_jac_g))) {
     stop("constraint callbacks are required when constraints are present.", call. = FALSE)
+  }
+  if (is.null(eval_h)) {
+    # Ipopt's C interface requires a Hessian callback to be installed even in
+    # quasi-Newton mode, so `eval_h = NULL` is only meaningful when a Hessian
+    # approximation is requested. Substitute a no-op callback (Ipopt never asks
+    # it for values under limited-memory) and report an empty structure.
+    approx <- options[["hessian_approximation"]]
+    if (is.null(approx) || identical(approx, "exact")) {
+      stop("`eval_h = NULL` requires a Hessian approximation; set ",
+           "`options$hessian_approximation = \"limited-memory\"`.", call. = FALSE)
+    }
+    eval_h <- function(x, obj_factor, lambda) numeric()
+    hessian_structure <- matrix(integer(), ncol = 2)
   }
   jacobian_structure <- .as_structure(jacobian_structure, "jacobian_structure")
   hessian_structure <- .as_structure(hessian_structure, "hessian_structure")

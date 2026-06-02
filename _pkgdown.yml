@@ -1,0 +1,13 @@
+url: https://bnaras.github.io/ipopt/
+
+template:
+  bootstrap: 5
+
+reference:
+- title: Solving nonlinear programs
+  contents:
+  - ipopt_solve
+- title: Package information
+  contents:
+  - ipopt_version
+  - ipopt-package

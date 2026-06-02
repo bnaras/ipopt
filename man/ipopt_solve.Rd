@@ -45,7 +45,8 @@ Hessian (no rows in \code{hessian_structure}, the function returning
 \code{numeric()}) is valid and corresponds to a linear objective with
 linear/bound constraints. Pass \code{NULL} only when no exact Hessian is
 available, in which case a Hessian approximation must be requested via
-\code{options} (for example \code{hessian_approximation = "limited-memory"}).}
+\code{options} (for example \code{hessian_approximation = "limited-memory"});
+\code{eval_h = NULL} without such an option is an error.}
 
 \item{hessian_structure}{Integer two-column matrix of one-based lower
 triangular row/column positions for Hessian nonzeros.}

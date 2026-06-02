@@ -1,11 +1,18 @@
-# ipopt
+# ipopt <img src="man/figures/logo.png" align="right" height="139" alt="ipopt hex logo" />
 
 <!-- badges: start -->
   [![R-CMD-check](https://github.com/bnaras/ipopt/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/bnaras/ipopt/actions/workflows/R-CMD-check.yaml)
+  [![pkgdown](https://github.com/bnaras/ipopt/actions/workflows/pkgdown.yaml/badge.svg)](https://github.com/bnaras/ipopt/actions/workflows/pkgdown.yaml)
   <!-- badges: end -->
 
 Lightweight R interface to the Ipopt nonlinear optimizer through Ipopt's C
 interface.
+
+See the [_Solving nonlinear programs with
+ipopt_](https://bnaras.github.io/ipopt/articles/ipopt.html) vignette for a
+guided tour of the objective, gradient, constraint Jacobian, and
+Hessian-of-the-Lagrangian callbacks, with worked examples (HS071, Rosenbrock,
+limited-memory, and a maximum-entropy problem).
 
 The package links against an Ipopt library located at build time. On Linux
 and macOS this is the system Ipopt found with `pkg-config`; on Windows it is

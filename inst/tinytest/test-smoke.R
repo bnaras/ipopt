@@ -55,3 +55,31 @@ ans <- ipopt_solve(
 expect_equal(ans$status_code, 0L)
 expect_equal(ans$solution, c(1, 1), tolerance = 1e-6)
 expect_equal(ans$objective, 2, tolerance = 1e-8)
+
+# `eval_h = NULL` with a Hessian approximation: Ipopt's C interface still needs
+# a callback installed, so the wrapper substitutes a no-op one. Solve the
+# Rosenbrock function in limited-memory (L-BFGS) mode with no exact Hessian.
+ans <- ipopt_solve(
+  x0 = c(-1.2, 1),
+  lower = c(-Inf, -Inf),
+  upper = c(Inf, Inf),
+  eval_f = function(x) (1 - x[1])^2 + 100 * (x[2] - x[1]^2)^2,
+  eval_grad_f = function(x) c(
+    -2 * (1 - x[1]) - 400 * x[1] * (x[2] - x[1]^2),
+    200 * (x[2] - x[1]^2)),
+  eval_h = NULL,
+  options = list(print_level = 0L, tol = 1e-8,
+                 hessian_approximation = "limited-memory")
+)
+
+expect_equal(ans$status_code, 0L)
+expect_equal(ans$solution, c(1, 1), tolerance = 1e-5)
+
+# `eval_h = NULL` without an approximation is a usage error.
+expect_error(
+  ipopt_solve(
+    x0 = 0, lower = -Inf, upper = Inf,
+    eval_f = function(x) x^2, eval_grad_f = function(x) 2 * x,
+    eval_h = NULL, options = list(print_level = 0L)),
+  "requires a Hessian approximation"
+)

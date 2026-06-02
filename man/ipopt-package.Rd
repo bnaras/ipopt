@@ -6,10 +6,17 @@
 \alias{ipopt-package}
 \title{Ipopt package library from COIN OR tools which can solve nonlinear optimization problems}
 \description{
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
 Provides a lightweight R interface to the Ipopt nonlinear optimization solver through Ipopt's C interface. The package is intended for r-universe builds that provide Ipopt and its open linear solver dependencies, such as MUMPS, through system libraries discoverable by pkg-config.
 }
 \author{
 \strong{Maintainer}: Balasubramanian Narasimhan \email{naras@stanford.edu}
+
+Authors:
+\itemize{
+  \item Balasubramanian Narasimhan \email{naras@stanford.edu}
+}
 
 Other contributors:
 \itemize{

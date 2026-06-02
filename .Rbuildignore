@@ -4,3 +4,10 @@
 ^configure\.log$
 
 ^\.github$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^tools/build-logo\.R$
+^cleanup$
+^.*\.tar\.gz$
+^.*\.Rcheck$
