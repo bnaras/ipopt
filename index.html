@@ -61,7 +61,7 @@
 
 <p>Lightweight R interface to the Ipopt nonlinear optimizer through Ipopt’s C interface.</p>
 <p>See the <a href="https://bnaras.github.io/ipopt/articles/ipopt.html"><em>Solving nonlinear programs with ipopt</em></a> vignette for a guided tour of the objective, gradient, constraint Jacobian, and Hessian-of-the-Lagrangian callbacks, with worked examples (HS071, Rosenbrock, limited-memory, and a maximum-entropy problem).</p>
-<p>The package links against an Ipopt library located at build time. On Linux and macOS this is the system Ipopt found with <code>pkg-config</code>; on Windows it is one of Ipopt’s official prebuilt release binaries (see below). There is no binary on CRAN/r-universe for every platform yet, so most users build from source against a locally installed Ipopt.</p>
+<p>The package links against an Ipopt library located at build time. On Linux and macOS this is the system Ipopt found with <code>pkg-config</code>; on Windows it is one of Ipopt’s official prebuilt release binaries (see below). The package is always installed from source against that locally available Ipopt.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -75,17 +75,14 @@
 <div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" tabindex="-1"></a><span class="co"># Debian / Ubuntu</span></span>
 <span id="cb2-2"><a href="#cb2-2" tabindex="-1"></a><span class="fu">sudo</span> apt-get install <span class="at">-y</span> coinor-libipopt-dev pkg-config</span>
 <span id="cb2-3"><a href="#cb2-3" tabindex="-1"></a><span class="ex">R</span> CMD INSTALL .</span></code></pre></div>
-<p>A binary will also be available from the <a href="https://bnaras.r-universe.dev" class="external-link">r-universe</a> once Ipopt is registered in the system-requirements database:</p>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"ipopt"</span>, repos <span class="op">=</span> <span class="st">"https://bnaras.r-universe.dev"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level3">
 <h3 id="macos-build-from-source">macOS (build from source)<a class="anchor" aria-label="anchor" href="#macos-build-from-source"></a>
 </h3>
 <p>Homebrew provides Ipopt, so macOS users build from source. The <code>configure</code> script locates the Homebrew Ipopt automatically:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" tabindex="-1"></a><span class="ex">brew</span> install ipopt pkg-config</span></code></pre></div>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"ipopt"</span>, repos <span class="op">=</span> <span class="st">"https://bnaras.r-universe.dev"</span>, type <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" tabindex="-1"></a><span class="ex">brew</span> install ipopt pkg-config</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"ipopt"</span>, repos <span class="op">=</span> <span class="st">"https://bnaras.github.io/drat"</span>, type <span class="op">=</span> <span class="st">"source"</span><span class="op">)</span></span></code></pre></div>
 <p>Equivalently, clone the repository and run <code>R CMD INSTALL .</code>.</p>
 </div>
 <div class="section level3">
@@ -97,13 +94,13 @@
 <li><p>Download the latest <strong><code>win64-msvs2022-md</code></strong> zip from <a href="https://github.com/coin-or/Ipopt/releases" class="external-link">Ipopt releases</a> and extract it, for example to <code>C:\Ipopt</code>, giving you <code>C:\Ipopt\include\coin-or</code>, <code>C:\Ipopt\lib</code>, and <code>C:\Ipopt\bin</code>.</p></li>
 <li>
 <p>Build from source, pointing the package at that folder (use <strong>forward slashes</strong>):</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" tabindex="-1"></a><span class="ex">R</span> CMD INSTALL ipopt ^</span>
-<span id="cb6-2"><a href="#cb6-2" tabindex="-1"></a>  <span class="ex">--configure-vars=</span><span class="st">"INCLUDE_DIR=C:/Ipopt/include/coin-or LIB_DIR=C:/Ipopt/lib"</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" tabindex="-1"></a><span class="ex">R</span> CMD INSTALL ipopt ^</span>
+<span id="cb5-2"><a href="#cb5-2" tabindex="-1"></a>  <span class="ex">--configure-vars=</span><span class="st">"INCLUDE_DIR=C:/Ipopt/include/coin-or LIB_DIR=C:/Ipopt/lib"</span></span></code></pre></div>
 <p>Equivalently, set <code>IPOPT_HOME=C:/Ipopt</code> in the environment before installing and the script will find the headers, library, and DLL itself.</p>
 </li>
 <li>
 <p>At <strong>run time</strong>, the package loads <code>ipopt-3.dll</code> and its dependencies (<code>coinmumps-3.dll</code> and the Intel runtime DLLs, all in <code>C:\Ipopt\bin</code>). Make sure that folder is on the <code>PATH</code> for the R session, e.g.</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Sys.setenv.html" class="external-link">Sys.setenv</a></span><span class="op">(</span>PATH <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"C:/Ipopt/bin"</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.getenv.html" class="external-link">Sys.getenv</a></span><span class="op">(</span><span class="st">"PATH"</span><span class="op">)</span>, sep <span class="op">=</span> <span class="st">";"</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bnaras.github.io/ipopt/">ipopt</a></span><span class="op">)</span></span></code></pre></div>
 <p>(Add <code>C:\Ipopt\bin</code> to the system <code>PATH</code> to avoid doing this each session.)</p>
@@ -114,7 +111,7 @@
 <div class="section level2">
 <h2 id="smoke-test">Smoke Test<a class="anchor" aria-label="anchor" href="#smoke-test"></a>
 </h2>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://bnaras.github.io/ipopt/">ipopt</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu"><a href="reference/ipopt_solve.html">ipopt_solve</a></span><span class="op">(</span></span>
