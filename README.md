@@ -16,9 +16,8 @@ limited-memory, and a maximum-entropy problem).
 
 The package links against an Ipopt library located at build time. On Linux
 and macOS this is the system Ipopt found with `pkg-config`; on Windows it is
-one of Ipopt's official prebuilt release binaries (see below). There is no
-binary on CRAN/r-universe for every platform yet, so most users build from
-source against a locally installed Ipopt.
+one of Ipopt's official prebuilt release binaries (see below). The package is
+always installed from source against that locally available Ipopt.
 
 ## Installation
 
@@ -41,14 +40,6 @@ sudo apt-get install -y coinor-libipopt-dev pkg-config
 R CMD INSTALL .
 ```
 
-A binary will also be available from the
-[r-universe](https://bnaras.r-universe.dev) once Ipopt is registered in the
-system-requirements database:
-
-```r
-install.packages("ipopt", repos = "https://bnaras.r-universe.dev")
-```
-
 ### macOS (build from source)
 
 Homebrew provides Ipopt, so macOS users build from source. The `configure`
@@ -59,7 +50,7 @@ brew install ipopt pkg-config
 ```
 
 ```r
-install.packages("ipopt", repos = "https://bnaras.r-universe.dev", type = "source")
+install.packages("ipopt", repos = "https://bnaras.github.io/drat", type = "source")
 ```
 
 Equivalently, clone the repository and run `R CMD INSTALL .`.
